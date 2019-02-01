@@ -14,10 +14,8 @@ class SelectShelf extends Component {
                 <option value="none">None</option>
                 </select>
             </div>
-
         )
     }
-
 }
 
 export default SelectShelf
