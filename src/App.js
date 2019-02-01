@@ -23,11 +23,19 @@ class BooksApp extends React.Component {
   }
 
   updateShelf=(book,newShelf, oldShelf)=>{
-    BooksAPI.update(book, newShelf).then((response)=>{
-      this.setState({[newShelf]:[...this.state[newShelf], book], 
-        [oldShelf]:this.state[oldShelf].filter((bk)=>bk.shelf===oldShelf) 
-      }) 
-    });
+    if(newShelf!=="none"){
+      BooksAPI.update(book, newShelf).then((response)=>{
+        this.setState({[newShelf]:[...this.state[newShelf], book], 
+          [oldShelf]:this.state[oldShelf].filter((bk)=>bk.shelf===oldShelf) 
+        }) 
+      });
+
+    }else{
+      BooksAPI.update(book, newShelf).then((response)=>{
+        this.setState({[oldShelf]:this.state[oldShelf].filter((bk)=>bk.shelf===oldShelf)})
+      })
+    }
+    
   }
 
   render() {
