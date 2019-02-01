@@ -12,7 +12,6 @@ class BooksApp extends React.Component {
     Current:[],
     Future:[],
     Done:[],
-    screen: "shelfs" //shelfs or search
   }
   componentDidMount(){
     BooksAPI.getAll().then((books)=>{
@@ -21,16 +20,7 @@ class BooksApp extends React.Component {
       this.setState({Done:books.filter((book)=>book.shelf==="read")});  
     })
   }
-/* changeScreen=()=>{
-  if(this.state.screen==="shelfs"){
-    this.setState({screen:"search"})
-    //window.location.href="#search"
-  }else{
-    this.setState({screen:"shelfs"})
-    //window.location.href="#shelfs"
-  }
-}
- */
+
   render() {
     return (
       <div className="app">
@@ -50,7 +40,7 @@ class BooksApp extends React.Component {
       <Route path="/search" render={()=>(
         <SearchBook/>
       )}/>
-        <AddBook changeScreen={this.changeScreen}/>
+        <AddBook/>
       </div>
 
     )  
