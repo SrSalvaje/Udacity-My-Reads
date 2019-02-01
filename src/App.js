@@ -9,16 +9,30 @@ import SearchBook from './SearchBook';
 class BooksApp extends React.Component {
   state={
     //AllBooks:[],
-    Current:[],
-    Future:[],
-    Done:[],
+    currentlyReading:[],
+    wantToRead:[],
+    read:[],
   }
   componentDidMount(){
     BooksAPI.getAll().then((books)=>{
-      this.setState({Current:books.filter((book)=>book.shelf==="currentlyReading")});
-      this.setState({Future:books.filter((book)=>book.shelf==="wantToRead")}); 
-      this.setState({Done:books.filter((book)=>book.shelf==="read")});  
+      this.setState({currentlyReading:books.filter((book)=>book.shelf==="currentlyReading")});
+      this.setState({wantToRead:books.filter((book)=>book.shelf==="wantToRead")}); 
+      this.setState({read:books.filter((book)=>book.shelf==="read")});  
     })
+  }
+
+  /* changeShelf = (e)=>{
+    const prevShelf=e.target.book.shelf,
+    newShelf=e.target.value;
+    console.log(e.target.value)
+    this.setState({prevShelf})
+    this.setState({newShelf})
+  }  */
+
+  updateShelf=(book,newShelf, oldShelf)=>{
+    this.setState({[newShelf]:[...this.state[newShelf], book]})
+    this.setState({[oldShelf]:this.state[oldShelf].filter((bk)=>bk.shelf===oldShelf)}) 
+    
   }
 
   render() {
@@ -30,9 +44,9 @@ class BooksApp extends React.Component {
           <h1>MyReads</h1>
         </div>
       <div className="list-books-content">
-        <Bookshelf title="Currently Reading" Books={this.state.Current} />
-        <Bookshelf title="Want to Read" Books={this.state.Future}/>
-        <Bookshelf title="Read" Books={this.state.Done}/>
+        <Bookshelf title="Currently Reading" Books={this.state.currentlyReading} updateShelf={this.updateShelf} />
+        <Bookshelf title="Want to Read" Books={this.state.wantToRead}  updateShelf={this.updateShelf} />
+        <Bookshelf title="Read" Books={this.state.read}  updateShelf={this.updateShelf} />
       </div>
     </div>
 
