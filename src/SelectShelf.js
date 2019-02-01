@@ -11,8 +11,8 @@ class SelectShelf extends Component {
     changeShelf = (shelf)=>{
         this.setState({shelf:shelf});
         const prevShelf=this.props.book.shelf,
-        newShelf=shelf
-        this.props.book.shelf=newShelf
+        newShelf=shelf;
+        this.props.book.shelf=newShelf;
         this.props.updateShelf(this.props.book, newShelf, prevShelf)
       } 
 
