@@ -15,24 +15,19 @@ class BooksApp extends React.Component {
   }
   componentDidMount(){
     BooksAPI.getAll().then((books)=>{
-      this.setState({currentlyReading:books.filter((book)=>book.shelf==="currentlyReading")});
-      this.setState({wantToRead:books.filter((book)=>book.shelf==="wantToRead")}); 
-      this.setState({read:books.filter((book)=>book.shelf==="read")});  
+      this.setState({currentlyReading:books.filter((book)=>book.shelf==="currentlyReading"), 
+        read:books.filter((book)=>book.shelf==="read"), 
+        wantToRead:books.filter((book)=>book.shelf==="wantToRead") 
+      });  
     })
   }
 
-  /* changeShelf = (e)=>{
-    const prevShelf=e.target.book.shelf,
-    newShelf=e.target.value;
-    console.log(e.target.value)
-    this.setState({prevShelf})
-    this.setState({newShelf})
-  }  */
-
   updateShelf=(book,newShelf, oldShelf)=>{
-    this.setState({[newShelf]:[...this.state[newShelf], book]})
-    this.setState({[oldShelf]:this.state[oldShelf].filter((bk)=>bk.shelf===oldShelf)}) 
-    
+    BooksAPI.update(book, newShelf).then((response)=>{
+      this.setState({[newShelf]:[...this.state[newShelf], book], 
+        [oldShelf]:this.state[oldShelf].filter((bk)=>bk.shelf===oldShelf) 
+      }) 
+    });
   }
 
   render() {
