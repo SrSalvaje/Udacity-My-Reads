@@ -23,17 +23,19 @@ class BooksApp extends React.Component {
   }
 
   updateShelf=(book,newShelf, oldShelf)=>{
-    if(newShelf!=="none"){
+    if(newShelf!=="none" && oldShelf !== "search"){
       BooksAPI.update(book, newShelf).then((response)=>{
         this.setState({[newShelf]:[...this.state[newShelf], book], 
           [oldShelf]:this.state[oldShelf].filter((bk)=>bk.shelf===oldShelf) 
         }) 
       });
 
-    }else{
+    }else if(oldShelf !== "search"){
       BooksAPI.update(book, newShelf).then((response)=>{
         this.setState({[oldShelf]:this.state[oldShelf].filter((bk)=>bk.shelf===oldShelf)})
       })
+    }else if(oldShelf==="search"){
+      BooksAPI.update(book, newShelf)
     }
     
   }
@@ -55,7 +57,7 @@ class BooksApp extends React.Component {
 
      )}/>
       <Route path="/search" render={()=>(
-        <SearchBook/>
+        <SearchBook updateShelf={this.updateShelf}/>
       )}/>
         <AddBook/>
       </div>
