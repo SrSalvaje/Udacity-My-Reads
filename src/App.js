@@ -24,7 +24,15 @@ class BooksApp extends React.Component {
       });  
     })
   }
+  isBookInShelf=(book)=> {
+    //makes an array with all books in shelfs and flattens it
+    const allBooks=[this.state.wantToRead, this.state.currentlyReading, this.state.read].flat();
+    let bookMatch=allBooks.filter((bk)=>bk.id===book.id);
+    if(bookMatch.length!==0){
+      book.shelf=bookMatch[0].shelf;
+    }
 
+  }
   searchBooks = (e)=>  {
     const query=e.target.value;
     this.setState({query});
@@ -33,7 +41,7 @@ class BooksApp extends React.Component {
         BooksAPI.search(query.trim()).then((books)=>{
             if(books.length > 0){
                 this.setState({searchResults: books.map((bk)=>{
-                    bk.shelf="searchResults"; 
+                    bk.shelf="none"; 
                     return bk}), error: false})
             }else{
                 this.setState({searchResults:[], error: true});
@@ -43,18 +51,18 @@ class BooksApp extends React.Component {
 };
 
   updateShelf=(book,newShelf, oldShelf, searchResults)=>{
-    if(newShelf!=="none" && oldShelf !== "searchResults"){
+    if(newShelf!=="none" && oldShelf !== "none"){
       BooksAPI.update(book, newShelf).then((response)=>{
         this.setState({[newShelf]:[...this.state[newShelf], book], 
           [oldShelf]:this.state[oldShelf].filter((bk)=>bk.shelf===oldShelf) 
         }) 
       });
 
-    }else if(oldShelf !== "searchResults"){
+    }else if(oldShelf !== "none"){
       BooksAPI.update(book, newShelf).then((response)=>{
         this.setState({[oldShelf]:this.state[oldShelf].filter((bk)=>bk.shelf===oldShelf)})
       })
-    }else if(oldShelf==="searchResults"){
+    }else if(oldShelf==="none"){
       BooksAPI.update(book, newShelf).then((response)=>{
         this.setState({[newShelf]:[...this.state[newShelf],book]})
       })
@@ -83,7 +91,10 @@ class BooksApp extends React.Component {
         searchBooks={this.searchBooks} 
         query={this.state.query} 
         searchResults={this.state.searchResults} 
-        error={this.state.error}/>
+        error={this.state.error}
+        isBookInShelf={this.isBookInShelf}
+        />
+        
       )}/>
         <AddBook/>
       </div>

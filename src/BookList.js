@@ -5,7 +5,7 @@ import noCover from "./icons/nocover.jpg"
 class BookList extends Component {
     
     render(){
-        const {Books, updateShelf}=this.props;
+        const {Books, updateShelf,Shelf}=this.props;
 
 
         return(
@@ -15,7 +15,7 @@ class BookList extends Component {
                          <div className="book">
                             <div className="book-top">
                                 <div className="book-cover"style={{ width:128, height:192, backgroundImage:  `url(${book.imageLinks && book.imageLinks.smallThumbnail ? book.imageLinks.smallThumbnail : noCover})`}}></div>
-                                <SelectShelf Books={Books} book={book} updateShelf={updateShelf}/>)}
+                                <SelectShelf Shelf={Shelf} Books={Books} book={book} updateShelf={updateShelf}/>)}
                             </div>
                             <div className="book-title">{book.title}</div>
                             <div className="book-authors">{book.authors}</div>
