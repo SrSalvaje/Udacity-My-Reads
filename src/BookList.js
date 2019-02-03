@@ -1,28 +1,27 @@
 import React, {Component} from 'react'
 import PropTypes from "prop-types"
 import SelectShelf from "./SelectShelf"
+import noCover from "./icons/nocover.jpg"
 class BookList extends Component {
-    state={
-        searchResults:[]
-    }
+    
+    render(){
+        const {Books, updateShelf}=this.props;
 
 
-    render(){ 
         return(
             <ol className="books-grid">
-                    {this.props.Books && (
-                        this.props.Books.map((book)=> (
+                    {Books.map((book)=> (
                      <li key={book.id}>
                          <div className="book">
                             <div className="book-top">
-                                <div className="book-cover"style={{ width:128, height:192, backgroundImage:  `url(${book.imageLinks.smallThumbnail})`}}></div>
-                                <SelectShelf Books={this.props.Books} book={book} updateShelf={this.props.updateShelf}/>)}
+                                <div className="book-cover"style={{ width:128, height:192, backgroundImage:  `url(${book.imageLinks && book.imageLinks.smallThumbnail ? book.imageLinks.smallThumbnail : noCover})`}}></div>
+                                <SelectShelf Books={Books} book={book} updateShelf={updateShelf}/>)}
                             </div>
                             <div className="book-title">{book.title}</div>
                             <div className="book-authors">{book.authors}</div>
                          </div>
                      </li>
-                )))}            
+                ))}            
             </ol>
         )
     }

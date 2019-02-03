@@ -8,41 +8,33 @@ import BookList from "./BookList"
 
 class SearchBook extends Component {
     state={
-        results:null,
-        query:""
+        searchResults:[],
+        query:"",
+        error:false
     }
 
-    componentDidUpdate(prevProps, prevState){
-        let results
-        if(prevState.query!==this.state.query /* && this.state.results===null */){
-            BooksAPI.search(this.state.query).then(function(result){
-                results=result.map((bk)=>{
-                    bk.shelf="search";
-                    return bk
-                });
-                console.log(results)
-                return results;
-            }).then((results)=>{
-                
-                if(results){
-                    this.setState({results:results})
+
+
+    searchBooks = (e)=>  {
+        const query=e.target.value;
+        this.setState({query});
+
+        if(query) {
+            BooksAPI.search(query.trim()).then((books)=>{
+                if(books.length > 0){
+                    this.setState({searchResults: books.map((bk)=>{
+                        bk.shelf="searchResults"; 
+                        return bk}), error: false})
                 }else{
-                    this.setState({results:null})
-                }
-            }).catch((error)=>{
-                if(error==="empty query" || error === 403){
-                    this.setState({results:null}) 
-                }
-            })
-            
-        }        
-    }
+                    this.setState({searchResults:[], error: true});
+                } 
+            });
+        } else this.setState({searchResults:[], error: false})
+    };
 
-    updateQuery=(query)=>{
-        this.setState({query: query.trim()})
-    }
-    
     render(){
+        const {query, searchResults, error}=this.state;
+    
         return(
             <div className="search-books">
                 <div className="search-books-bar">
@@ -52,13 +44,19 @@ class SearchBook extends Component {
                     <input 
                     type="text" 
                     placeholder="Search by title or author"
-                    value={this.state.query}
-                    onChange={(e)=> {this.updateQuery(e.target.value)}
-                    }/>
+                    value={query}
+                    onChange= {this.searchBooks}
+                    />
                 </div>
             </div>
             <div className="search-books-results">
-                <BookList Shelf="" Books={this.state.results} updateShelf={this.props.updateShelf}/>   
+            {searchResults.length>0 && (
+                <BookList  Books={this.state.searchResults} updateShelf={this.props.updateShelf}/>  
+            )}
+            {error && (
+                <h2>No books found, try a different search term</h2>
+            )}
+                 
             </div>
           </div>
           
