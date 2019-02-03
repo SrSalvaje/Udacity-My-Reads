@@ -7,34 +7,8 @@ import BookList from "./BookList"
 
 
 class SearchBook extends Component {
-    state={
-        searchResults:[],
-        query:"",
-        error:false
-    }
-
-
-
-    searchBooks = (e)=>  {
-        const query=e.target.value;
-        this.setState({query});
-
-        if(query) {
-            BooksAPI.search(query.trim()).then((books)=>{
-                if(books.length > 0){
-                    this.setState({searchResults: books.map((bk)=>{
-                        bk.shelf="searchResults"; 
-                        return bk}), error: false})
-                }else{
-                    this.setState({searchResults:[], error: true});
-                } 
-            });
-        } else this.setState({searchResults:[], error: false})
-    };
-
     render(){
-        const {query, searchResults, error}=this.state;
-    
+        const {query, searchResults, error, searchBooks, updateShelf}=this.props;
         return(
             <div className="search-books">
                 <div className="search-books-bar">
@@ -45,18 +19,17 @@ class SearchBook extends Component {
                     type="text" 
                     placeholder="Search by title or author"
                     value={query}
-                    onChange= {this.searchBooks}
+                    onChange= {searchBooks}
                     />
                 </div>
             </div>
             <div className="search-books-results">
             {searchResults.length>0 && (
-                <BookList  Books={this.state.searchResults} updateShelf={this.props.updateShelf}/>  
+                <BookList Shelf={"searchResults"} Books={searchResults} updateShelf={updateShelf}/>  
             )}
             {error && (
                 <h2>No books found, try a different search term</h2>
-            )}
-                 
+            )}        
             </div>
           </div>
           

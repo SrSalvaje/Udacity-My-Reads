@@ -12,6 +12,9 @@ class BooksApp extends React.Component {
     currentlyReading:[],
     wantToRead:[],
     read:[],
+    searchResults:[],
+    query:"",
+    error:false
   }
   componentDidMount(){
     BooksAPI.getAll().then((books)=>{
@@ -21,6 +24,23 @@ class BooksApp extends React.Component {
       });  
     })
   }
+
+  searchBooks = (e)=>  {
+    const query=e.target.value;
+    this.setState({query});
+
+    if(query) {
+        BooksAPI.search(query.trim()).then((books)=>{
+            if(books.length > 0){
+                this.setState({searchResults: books.map((bk)=>{
+                    bk.shelf="searchResults"; 
+                    return bk}), error: false})
+            }else{
+                this.setState({searchResults:[], error: true});
+            } 
+        });
+    } else this.setState({searchResults:[], error: false})
+};
 
   updateShelf=(book,newShelf, oldShelf, searchResults)=>{
     if(newShelf!=="none" && oldShelf !== "searchResults"){
@@ -59,7 +79,11 @@ class BooksApp extends React.Component {
 
      )}/>
       <Route path="/search" render={()=>(
-        <SearchBook updateShelf={this.updateShelf}/>
+        <SearchBook updateShelf={this.updateShelf} 
+        searchBooks={this.searchBooks} 
+        query={this.state.query} 
+        searchResults={this.state.searchResults} 
+        error={this.state.error}/>
       )}/>
         <AddBook/>
       </div>
