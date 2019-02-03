@@ -24,13 +24,17 @@ class BooksApp extends React.Component {
       });  
     })
   }
+
   isBookInShelf=(book)=> {
+    
     //makes an array with all books in shelfs and flattens it
-    const allBooks=[this.state.wantToRead, this.state.currentlyReading, this.state.read].flat();
+     const allBooks=[this.state.wantToRead, this.state.currentlyReading, this.state.read].flat();
     let bookMatch=allBooks.filter((bk)=>bk.id===book.id);
+    
     if(bookMatch.length!==0){
       book.shelf=bookMatch[0].shelf;
-    }
+      console.log(book.shelf)
+    } 
 
   }
   searchBooks = (e)=>  {

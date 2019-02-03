@@ -1,14 +1,13 @@
 import React, {Component} from "react"
 import {Link} from "react-router-dom"
-import * as BooksAPI from './BooksAPI'
-import escapeRegExp from 'escape-string-regexp' 
- import sortBy from 'sort-by'
 import BookList from "./BookList"
 
 
 class SearchBook extends Component {
+
+    
     render(){
-        const {query, searchResults, error, searchBooks, updateShelf}=this.props;
+        const {query, searchResults, error, searchBooks, updateShelf, isBookInShelf}=this.props;
         return(
             <div className="search-books">
                 <div className="search-books-bar">
@@ -25,7 +24,7 @@ class SearchBook extends Component {
             </div>
             <div className="search-books-results">
             {searchResults.length>0 && (
-                <BookList Shelf={"searchResults"} Books={searchResults} updateShelf={updateShelf}/>  
+                <BookList isBookInShelf={isBookInShelf} Books={searchResults} updateShelf={updateShelf}/>  
             )}
             {error && (
                 <h2>No books found, try a different search term</h2>

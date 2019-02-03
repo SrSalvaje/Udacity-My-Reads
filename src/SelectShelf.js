@@ -8,17 +8,19 @@ class SelectShelf extends Component {
 
     }
     
+    componentDidMount(){
+       if(typeof this.props.isBookInShelf === "function"){
+           this.props.isBookInShelf(this.props.book);
+           this.setState({shelf:this.props.book.shelf});
+       }
+    }
+    
+    
+  
     changeShelf = (shelf)=>{
-        //checcks that the function has been passed as prop
-        if(this.props.isBookInShelf){
-            this.props.isBookInShelf(this.props.book)
-        }
+       
         //sets state of book to chosen shelf
-     
-            this.setState({shelf:shelf});
-        
-        
-        
+        this.setState({shelf:shelf});
         //stores previous shelf
         const prevShelf=this.props.book.shelf,
         //stores new shelf
@@ -32,6 +34,7 @@ class SelectShelf extends Component {
     render(){
         const shelf=this.state.shelf;
         return (
+            
             <div className="book-shelf-changer">
                 <select value={shelf} onChange={(e)=>this.changeShelf(e.target.value)}>
                 <option value="move" disabled>Move to...</option>
