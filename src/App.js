@@ -8,16 +8,20 @@ import SearchBook from './SearchBook';
 
 class BooksApp extends React.Component {
   state={
-    //AllBooks:[],
+    //main page book shelfs
     currentlyReading:[],
     wantToRead:[],
     read:[],
+    //search page states
     searchResults:[],
     query:"",
+    //used conditionally render message if no matchiong items are found
     error:false
   }
   componentDidMount(){
+    //gets all the books
     BooksAPI.getAll().then((books)=>{
+      //and sorts them by shelf
       this.setState({currentlyReading:books.filter((book)=>book.shelf==="currentlyReading"), 
         read:books.filter((book)=>book.shelf==="read"), 
         wantToRead:books.filter((book)=>book.shelf==="wantToRead") 
@@ -25,18 +29,18 @@ class BooksApp extends React.Component {
     })
   }
 
+  //passed as props to <SearchBook/> called after books from search result are mounted
   isBookInShelf=(book)=> {
-    
     //makes an array with all books in shelfs and flattens it
      const allBooks=[this.state.wantToRead, this.state.currentlyReading, this.state.read].flat();
-    let bookMatch=allBooks.filter((bk)=>bk.id===book.id);
-    
+    //then checks if any of them match the book (from search results) whose shelf is being checked
+     let bookMatch=allBooks.filter((bk)=>bk.id===book.id);
+    //if there is a match, it sets its shelf to the corresponing one
     if(bookMatch.length!==0){
       book.shelf=bookMatch[0].shelf;
-      console.log(book.shelf)
     } 
-
   }
+  //called by the search page
   searchBooks = (e)=>  {
     const query=e.target.value;
     this.setState({query});
@@ -44,31 +48,40 @@ class BooksApp extends React.Component {
     if(query) {
         BooksAPI.search(query.trim()).then((books)=>{
             if(books.length > 0){
-                this.setState({searchResults: books.map((bk)=>{
+                this.setState(
+                  //sets the search results books shelf to none **This could be a good place to simplify code by using this.isBookInShelf 
+                  //instead of with componentDidMount
+                  {searchResults: books.map((bk)=>{
                     bk.shelf="none"; 
-                    return bk}), error: false})
+                    return bk}), 
+                    error: false})
             }else{
+              //id there are no search results or an error occurs during sorting, empties the array and sets the condition to trigger messgae instead of search results
                 this.setState({searchResults:[], error: true});
             } 
-        });
-    } else this.setState({searchResults:[], error: false})
+        }); 
+        //called if query is empty
+    } else { 
+      this.setState({searchResults:[], error: false});
+      }
 };
 
+//used to move books between shelfs 
   updateShelf=(book,newShelf, oldShelf, searchResults)=>{
     if(newShelf!=="none" && oldShelf !== "none"){
       BooksAPI.update(book, newShelf).then((response)=>{
-        this.setState({[newShelf]:[...this.state[newShelf], book], 
+        this.setState({[newShelf]:[...this.state[newShelf], book],//***Hey Reviewer, is there a prefered or a "React" way of adding items to a state array?
           [oldShelf]:this.state[oldShelf].filter((bk)=>bk.shelf===oldShelf) 
         }) 
       });
 
     }else if(oldShelf !== "none"){
       BooksAPI.update(book, newShelf).then((response)=>{
-        this.setState({[oldShelf]:this.state[oldShelf].filter((bk)=>bk.shelf===oldShelf)})
+        this.setState({[oldShelf]:this.state[oldShelf].filter((bk)=>bk.shelf===oldShelf)});
       })
     }else if(oldShelf==="none"){
       BooksAPI.update(book, newShelf).then((response)=>{
-        this.setState({[newShelf]:[...this.state[newShelf],book]})
+        this.setState({[newShelf]:[...this.state[newShelf],book]});
       })
     }
     

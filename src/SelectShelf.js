@@ -18,17 +18,15 @@ class SelectShelf extends Component {
     
   
     changeShelf = (shelf)=>{
-       
         //sets state of book to chosen shelf
         this.setState({shelf:shelf});
         //stores previous shelf
         const prevShelf=this.props.book.shelf,
         //stores new shelf
         newShelf=shelf;
-        //not sure if needed (or if anti pattern, isnt being changed already by the first set state?)
-        this.props.book.shelf=newShelf;
+        this.props.book.shelf=newShelf;//**Note to self */not sure if needed or if anti pattern, isnt this being changed already by the first set state?
         //calls the update shelf function
-        this.props.updateShelf(this.props.book, newShelf, prevShelf)
+        this.props.updateShelf(this.props.book, newShelf, prevShelf);
       } 
 
     render(){

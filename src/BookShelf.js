@@ -10,7 +10,7 @@ class BookShelf extends Component {
     componentDidMount(){
         this.setShelf()
     }
-
+    // sets the shelf of this component (used to easily identify shelf)
     setShelf= ()=>{
         if(this.props.title==="Currently Reading"){
             this.setState({Shelf:"currentlyReading"})

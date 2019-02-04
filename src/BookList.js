@@ -13,7 +13,11 @@ class BookList extends Component {
                      <li key={book.id}>
                          <div className="book">
                             <div className="book-top">
-                                <div className="book-cover"style={{ width:128, height:192, backgroundImage:  `url(${book.imageLinks && book.imageLinks.smallThumbnail ? book.imageLinks.smallThumbnail : noCover})`}}></div>
+                                <div className="book-cover" 
+                                    style={{ width:128, height:192, 
+                                    backgroundImage:  `url(${/*fall back for lack of  cover imageimage*/ book.imageLinks && book.imageLinks.smallThumbnail ? book.imageLinks.smallThumbnail : noCover})`
+                                    }}>
+                                </div>
                                 <SelectShelf Shelf={Shelf} Books={Books} book={book} isBookInShelf={isBookInShelf} updateShelf={updateShelf}/>)}
                             </div>
                             <div className="book-title">{book.title}</div>

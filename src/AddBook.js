@@ -10,10 +10,8 @@ class AddBook extends Component {
                         <button>Add a book</button>
                 </Link>
             </div>
-
         )
     }
-
 }
 
 export default AddBook
