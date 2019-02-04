@@ -23,8 +23,8 @@ class SearchBook extends Component {
                 </div>
             </div>
             <div className="search-books-results">
-            {searchResults.length>0 && (
-                <BookList isBookInShelf={isBookInShelf} Books={searchResults} updateShelf={updateShelf}/>  /*Hey Reviewer, suggestions on how to implement debounce in React are welcomed :) */
+            {searchResults.length>0 && query!=="" && (
+                <BookList isBookInShelf={isBookInShelf} Books={searchResults} updateShelf={updateShelf} query={query}/>  /*Hey Reviewer, suggestions on how to implement debounce in React are welcomed :) */
             )}
             {error && (
                 <h2>No books found, try a different search term</h2>
